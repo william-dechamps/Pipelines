@@ -20,8 +20,14 @@ describe("Testing Pet class", () => {
     })
   })
   describe("JSON representation", () => {
-    test("WRITE ME", () => {
-      expect(true).toBe(true)
+    let pet: Pet
+    let json: object
+    beforeAll(() => {
+      pet = new Pet("Pastèque", "dog", 2)
+      json = pet.toJSON()
+    })
+    test("Generate JSON", () => {
+      expect(json).toBeInstanceOf(Object)
     })
   })
 })

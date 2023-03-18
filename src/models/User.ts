@@ -15,29 +15,41 @@ export default class User implements JSONable {
     this.pets = []
   }
 
-  getFullname() {
-    return `${this.firstname} ${this.lastname}`
+  /**
+   * @returns string `firstname lastname`
+   */
+  getFullname(): string {
+    throw new Error("Not implemented")
   }
 
+  /**
+   * Add a Pet in the user's Pets list
+   * @param pet Pet to add to the list
+   */
   addPet(pet: Pet) {
-    let existing = this.getPet(pet.name, pet.kind)
-    if (existing) {
-      existing = pet
-      return pet
-    }
-    this.pets.push(pet)
-    return pet
+    throw new Error("Not implemented")
   }
 
-  getPet(name: string, kind: string): Pet | null {
-    return this.pets.find(p => p.name === name && p.kind === kind) || null
-  }
-
+  /**
+   * 
+   * @returns a JSON representation of the current User
+   * @example
+   * ```json
+   * {
+   *    firstname: "Nicolas",
+   *    lastname: "Espiau",
+   *    pets: [
+   *      {
+   *        vetId: 100322,
+   *        name: "Pastèque",
+   *        kind: "dog",
+   *        age: "2"
+   *      }
+   *    ]
+   * }
+   * ```
+   */
   toJSON(): object {
-    return {
-      firstname: this.firstname,
-      lastname: this.lastname,
-      pets: this.pets.map(p => p.describe())
-    }
+    throw new Error("Not implemented")
   }
 }
