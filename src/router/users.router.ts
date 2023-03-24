@@ -1,10 +1,11 @@
 import KoaRouter from "koa-router"
 import getController from "../controllers/users.ctrl"
+import PetRepository from "../repositories/pets/interface"
 import UserRepository from "../repositories/users/interface"
 
-export default function getRouter(userRepo: UserRepository) {
+export default function getRouter(userRepo: UserRepository, petRepo: PetRepository) {
   const router = new KoaRouter({ "prefix": "users" })
-  const controller = getController(userRepo)
+  const controller = getController(userRepo, petRepo)
 
   router
     .get('/',

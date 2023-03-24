@@ -5,7 +5,7 @@ export default class User implements JSONable {
   id?: any
   firstname: string
   lastname: string
-  pets: Pet[]
+  pets: string[]
   constructor(firstname: string, lastname: string) {
     this.firstname = firstname
     this.lastname = lastname
@@ -36,17 +36,14 @@ export default class User implements JSONable {
    *    firstname: "Nicolas",
    *    lastname: "Espiau",
    *    pets: [
-   *      {
-   *        vetId: 100322,
-   *        name: "Pastèque",
-   *        kind: "dog",
-   *        age: "2"
-   *      }
+   *      10322
    *    ]
    * }
    * ```
    */
-  toJSON(): object {
-    throw new Error("Not implemented")
+  toJSON() {
+    return {
+      pets: this.pets
+    }
   }
 }

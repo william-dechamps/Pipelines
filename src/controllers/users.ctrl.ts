@@ -1,8 +1,9 @@
 import { Next, ParameterizedContext } from "koa"
 import { InternalError, InvalidPayload, ResourceNotFoundError } from "../helpers/ControllerErrors"
+import PetRepository from "../repositories/pets/interface"
 import UserRepository from "../repositories/users/interface"
 
-export default function getController(userRepo: UserRepository) {
+export default function getController(userRepo: UserRepository, petRepo: PetRepository) {
 
   async function addUser(ctx: ParameterizedContext, next: Next) {
     // Validate payload
@@ -30,8 +31,12 @@ export default function getController(userRepo: UserRepository) {
         throw new ResourceNotFoundError("User not found")
       }
 
+      const pets = await petRepo.list(user.pets)
+
+      const displayableUser = { ...user.toJSON(), pets: pets }
+
       ctx.status = 200
-      ctx.body = user.toJSON()
+      ctx.body = displayableUser
     } catch (e: any) {
       throw new InternalError(e.message)
     }
@@ -43,6 +48,12 @@ export default function getController(userRepo: UserRepository) {
     ctx.body = { message: "Not yet implemented" }
 
     next()
+  }
+
+  async function addPet(ctx: ParameterizedContext, next: Next) {
+    // users/:id/pets
+    // POST
+    // body: PetId[]
   }
 
   async function deleteUser(ctx: ParameterizedContext, next: Next) {
