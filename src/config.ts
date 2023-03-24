@@ -5,8 +5,6 @@ nconf.file(nconf.any(["CONFIG_FILE", "config"]) || "./config/app.conf.json")
 
 type AppSettings = {
     port?: number,
-    jwtSecret?: string,
-    jwtTTL?: string,
     mockDb?: boolean
 }
 
@@ -30,9 +28,7 @@ const Config = {
     getAppSettings(): AppSettings {
         return {
             "port": nconf.get("PORT") || 80,
-            "jwtSecret": nconf.get("APP_JWT_SECRETS") || "defaultsecret",
-            "jwtTTL": nconf.get("APP_JWT_TTL") || "10 minutes",
-            "mockDb": nconf.get("MOCK_DB") == "true"
+            "mockDb": nconf.get("MOCK_DB") === "true"
         }
     },
     getLogSettings(): LogSettings {
