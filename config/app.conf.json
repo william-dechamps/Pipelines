@@ -1,4 +1,4 @@
 {
   "PORT": 6800,
-  "MOCK_DB": "true"
+  "MOCK_DB": "false"
 }

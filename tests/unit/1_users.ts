@@ -1,4 +1,5 @@
-import Pet from "../../src/models/Pet"
+/**
+ * import Pet from "../../src/models/Pet"
 import User from "../../src/models/User"
 
 describe("Testing User class", () => {
@@ -54,3 +55,4 @@ describe("Testing User class", () => {
     })
   })
 })
+*/

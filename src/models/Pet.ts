@@ -17,7 +17,12 @@ export default class Pet implements JSONable {
    * @returns Number the current pet's age calculated from its birthDate
    */
   getAge(): number {
-    throw new Error("Not implemented")
+    const today = new Date()
+    const age = today.getFullYear() - this.birthDate.getFullYear()
+    if (today.getMonth() === this.birthDate.getMonth()) {
+      return age - (today.getDate() > this.birthDate.getDate() ? 0 : 1)
+    }
+    return age - (today.getMonth() > this.birthDate.getMonth() ? 0 : 1)
   }
 
   /**
@@ -40,6 +45,11 @@ export default class Pet implements JSONable {
    * }
    * ```
    */toJSON(): Object {
-    throw new Error("Not implemented")
+    return {
+      vetId: this.vetId,
+      name: this.name,
+      kind: this.kind,
+      age: this.getAge()
+    }
   }
 }
