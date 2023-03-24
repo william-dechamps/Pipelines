@@ -1,85 +1,61 @@
-import { StorageUserId, StorageUser, StorageUserEmail } from "../../models/users/StorageUser";
-import { DuplicateError, NoResultError, ServerError } from "../Errors.common";
-import UserRepository from "./interface";
-import UserCollection from "../../models/users/MongoUser"
-import mongoose, { mongo } from "mongoose";
+import Pet from "../../models/Pet"
+import { DuplicateError, NoResultError, ServerError } from "../../helpers/RepositoryErrors"
+import PetRepository from "./interface"
+import { Collection, Db, ObjectId } from "mongodb"
 
-export default class UserRepositoryMongo implements UserRepository {
-  users: typeof UserCollection;
-  constructor() {
-    this.users = UserCollection;
+export default class PetRepositoryMongo implements PetRepository {
+  pets: Collection<Pet>
+  constructor(mongoDb: Db) {
+    this.pets = mongoDb.collection<Pet>("pets")
   }
 
-  async get(id: StorageUserId): Promise<StorageUser | undefined> {
-    const mongoUser = await this.users.findOne({ _id: mongoose.Types.ObjectId(id) }, { __v: 0 }, { lean: true });
-    if (!mongoUser) {
-      return mongoUser;
+  async get(id: string): Promise<Pet | null> {
+    const mongoPet = await this.pets.findOne({ _id: new ObjectId(id) })
+    if (!mongoPet) {
+      return mongoPet
     }
 
-    const user: StorageUser = {
-      id: String(mongoUser._id),
-      email: mongoUser.email,
-      password: mongoUser.password,
-      state: mongoUser.state
-    }
-
-    return user;
+    return mongoPet
   }
 
-  async getByEmail(email: StorageUserEmail): Promise<StorageUser | undefined> {
-    const mongoUser = await this.users.findOne({ email: email }, { _v: 0 }, { lean: true });
-    if (!mongoUser) {
-      return mongoUser;
-    }
-    return {
-      id: String(mongoUser._id),
-      email: mongoUser.email,
-      password: mongoUser.password,
-      state: mongoUser.state
-    }
+  async list(ids: string[]): Promise<Pet[]> {
+    return await this.pets.find({ _id: { $in: ids.map(id => new ObjectId(id)) } }).toArray()
   }
 
-  async add(user: StorageUser) {
-    let mongoUser;
+  async add(pet: Pet) {
+    let result
     try {
-      mongoUser = await this.users.create(user);
+      result = await this.pets.insertOne(pet)
     } catch (e: any) {
       if (e.message.match(/duplicate key/)) {
-        throw new DuplicateError("user");
+        throw new DuplicateError("Pet", String(pet.vetId))
       } else {
-        throw new ServerError(e.message);
+        throw new ServerError(e.message)
       }
     }
-    user.id = String(mongoUser._id);
-    return user;
+    pet.id = result.insertedId.toString()
+    return pet
   }
 
-  async update(user: StorageUser): Promise<StorageUser> {
-    const mongoUser = {
-      _id: mongoose.Types.ObjectId(user.id),
-      email: user.email,
-      state: user.state,
-      password: user.password
+  async update(pet: Pet): Promise<Pet> {
+    const mongoPetUpdated = await this.pets.findOneAndUpdate({ _id: new ObjectId(pet.id) }, pet, { returnDocument: 'after' })
+
+    if (!mongoPetUpdated) {
+      throw new NoResultError("Pet", pet.id)
     }
 
-    const mongoUserUpdated = await this.users.findOneAndUpdate({ _id: mongoUser._id }, mongoUser, { new: true });
-
-    if (!mongoUserUpdated) {
-      throw new NoResultError("user");
-    }
-
-    return user;
+    return pet
   }
 
-  async remove(id: StorageUserId) {
-    let user;
+  async remove(id: string) {
+    let result
     try {
-      user = await this.users.findOneAndDelete({ _id: mongoose.Types.ObjectId(id) });
+      result = await this.pets.deleteOne({ _id: new ObjectId(id) })
     } catch (e: any) {
-      throw new ServerError(e.message);
+      throw new ServerError(e.message)
     }
-    if (!user) {
-      throw new NoResultError("user");
+    if (result.deletedCount === 0) {
+      throw new NoResultError("Pet", id)
     }
   }
-};
+}

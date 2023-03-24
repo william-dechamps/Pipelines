@@ -1,55 +1,52 @@
-import { StorageUserId,StorageUser, StorageUserEmail } from "../../models/users/StorageUser";
-import { DuplicateError, NoResultError } from "../Errors.common";
-import UserRepository from "./interface"
+import Pet from "../../models/Pet"
+import { DuplicateError, NoResultError } from "../../helpers/RepositoryErrors"
+import PetRepository from "./interface"
 
-export = class UserRepositoryMock implements UserRepository {
-  users: { [key: string]: StorageUser };
-  nextId:number = 0;
+export default class PetRepositoryMock implements PetRepository {
+  pets: { [key: string]: Pet }
+  nextId: number = 0
   constructor() {
-    this.users = {};
+    this.pets = {}
   }
 
-  async get(id: StorageUserId): Promise<StorageUser | undefined> {
-    return this.users[String(id)];
+  async get(id: string): Promise<Pet | null> {
+    return this.pets[String(id)] || null
   }
 
-  async getByEmail(email:StorageUserEmail): Promise<StorageUser | undefined> {
-    // get all users with this email (only one should be found or none if non existing user)
-    const user = Object.values(this.users).filter(storedUser => storedUser.email === email);
-    // return the user or undefined if no user found
-    return user.pop();
+  async list(ids: string[]): Promise<Pet[]> {
+    return Object.values(this.pets).filter(pet => ids.indexOf(pet.id) >= 0)
   }
 
-  async add(user: StorageUser) {
-    const existingUsers = Object.values(this.users).filter(storedUser => { return storedUser.email == user.email});
-    if (existingUsers.length != 0) {
-      throw new DuplicateError("user");
+  async add(pet: Pet) {
+    const existingPets = Object.values(this.pets).filter(storedPet => storedPet.vetId === pet.vetId)
+    if (existingPets.length != 0) {
+      throw new DuplicateError("Pet", String(pet.vetId))
     }
 
-    const id = String(this.nextId);
-    user.id = id;
-    this.users[id] = user;
-    let returnUser:StorageUser = Object.assign({}, user);
-    returnUser.id = id;
-    this.nextId++;
+    const id = String(this.nextId)
+    pet.id = id
+    this.pets[id] = pet
+    let returnPet: Pet = Object.assign({}, pet)
+    returnPet.id = id
+    this.nextId++
 
-    return returnUser;
+    return returnPet
   }
 
-  async update(user: StorageUser): Promise<StorageUser> {
-    if(!this.users[parseInt(user.id)]) {
-      throw new NoResultError("user");
+  async update(pet: Pet): Promise<Pet> {
+    if (!this.pets[parseInt(pet.id)]) {
+      throw new NoResultError("Pet", pet.id)
     }
 
-    this.users[parseInt(user.id)] = user;
-    return Object.assign({}, user);
+    this.pets[parseInt(pet.id)] = pet
+    return Object.assign({}, pet)
   }
 
-  async remove(id: StorageUserId) {
-    if(!this.users[parseInt(id)]) {
-      throw new NoResultError("user");
+  async remove(id: string) {
+    if (!this.pets[parseInt(id)]) {
+      throw new NoResultError("Pet", id)
     }
 
-    delete this.users[parseInt(id)];
+    delete this.pets[parseInt(id)]
   }
-};
+}

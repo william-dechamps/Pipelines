@@ -1,9 +1,9 @@
-import {StorageUser, StorageUserEmail, StorageUserId} from "../../models/users/StorageUser";
+import Pet from "../../models/Pet"
 
-export default interface UserRepository {
-  get(id:StorageUserId): Promise<StorageUser | undefined>;
-  getByEmail(email:StorageUserEmail): Promise<StorageUser | undefined>
-  add(user: StorageUser): Promise<StorageUser>;
-  update(user: StorageUser): Promise<StorageUser>;
-  remove(id: StorageUserId): Promise<void>;
+export default interface PetRepository {
+  get(id: string): Promise<Pet | null>
+  add(pet: Pet): Promise<Pet>
+  update(pet: Pet): Promise<Pet>
+  remove(id: string): Promise<void>
+  list(ids: string[]): Promise<Pet[]>
 }
