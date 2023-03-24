@@ -2,11 +2,13 @@ import Pet from "../../models/Pet"
 import { DuplicateError, NoResultError, ServerError } from "../../helpers/RepositoryErrors"
 import PetRepository from "./interface"
 import { Collection, Db, ObjectId } from "mongodb"
+import logger from "../../services/logger"
 
 export default class PetRepositoryMongo implements PetRepository {
   pets: Collection<Pet>
   constructor(mongoDb: Db) {
     this.pets = mongoDb.collection<Pet>("pets")
+    this.pets.createIndex({ vetId: 1 }, { unique: true })
   }
 
   async get(id: string): Promise<Pet | null> {
@@ -34,6 +36,7 @@ export default class PetRepositoryMongo implements PetRepository {
       }
     }
     pet.id = result.insertedId.toString()
+    logger.info(JSON.stringify(pet))
     return pet
   }
 

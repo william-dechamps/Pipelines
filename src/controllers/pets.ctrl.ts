@@ -1,5 +1,6 @@
 import { Next, ParameterizedContext } from "koa"
-import { InternalError, InvalidPayload, ResourceNotFoundError } from "../helpers/ControllerErrors"
+import { InternalError, InvalidPayload, ResourceAlreadyExistingError, ResourceNotFoundError } from "../helpers/ControllerErrors"
+import Pet from "../models/Pet"
 import PetRepository from "../repositories/pets/interface"
 
 export default function getController(petRepo: PetRepository) {
@@ -8,10 +9,24 @@ export default function getController(petRepo: PetRepository) {
     // Validate payload
     // > if no valid throw new InvalidPayload
     // Store user in DB
-    // 
-    ctx.status = 404
-    ctx.body = { message: "Not yet implemented" }
+    const payload: any = ctx.request.body
+    const expectedKeys = ["vetId", "name", "kind", "birthDate"]
+    const missingKeys = expectedKeys.filter(k => !Object.keys(payload).includes(k))
 
+    if (missingKeys.length > 0) {
+      throw new InvalidPayload(missingKeys, [])
+    }
+
+    try {
+      const pet = await petRepo.add(new Pet(payload.vetId, payload.name, payload.kind, new Date(payload.birthDate)))
+      ctx.status = 201
+      ctx.body = pet
+    } catch (e: any) {
+      if (e.message.match(/already exists in storage/)) {
+        throw new ResourceAlreadyExistingError(`Pet with vetId ${payload.vetId} already exists`)
+      }
+      throw new InternalError(e.message)
+    }
     next()
   }
 

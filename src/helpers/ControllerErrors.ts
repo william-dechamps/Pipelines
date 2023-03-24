@@ -29,3 +29,10 @@ export class ResourceNotFoundError extends HttpError {
     this.httpStatus = 404
   }
 }
+
+export class ResourceAlreadyExistingError extends HttpError {
+  constructor(message: string) {
+    super(message)
+    this.httpStatus = 409
+  }
+}

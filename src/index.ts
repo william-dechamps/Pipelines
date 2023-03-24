@@ -19,9 +19,11 @@ mainFac(appSettings)
       try {
         await next()
       } catch (err: any) {
-        if (err! instanceof HttpError) {
+        if (!err.httpStatus) {
           err = new InternalError(`Internal error with message \`${err.message}\``)
         }
+
+        console.error(err)
 
         ctx.status = err.httpStatus
         ctx.body = {

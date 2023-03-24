@@ -3,7 +3,7 @@ import getController from "../controllers/pets.ctrl"
 import PetRepository from "../repositories/pets/interface"
 
 export default function getRouter(petRepo: PetRepository) {
-  const router = new KoaRouter({ "prefix": "users" })
+  const router = new KoaRouter({ "prefix": "pets" })
   const controller = getController(petRepo)
 
   router

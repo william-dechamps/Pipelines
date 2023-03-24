@@ -7,6 +7,7 @@ export default class UserRepositoryMongo implements UserRepository {
   users: Collection<User>
   constructor(mongoDb: Db) {
     this.users = mongoDb.collection<User>("users")
+    this.users.createIndex({ firstname: 1, lastname: 1 }, { unique: true })
   }
 
   async get(id: string): Promise<User | null> {

@@ -19,6 +19,7 @@ export default (dependencies: any, conf: AppSettings) => {
   }
 
   return {
+    petRepo,
     userRepo
   }
 }
