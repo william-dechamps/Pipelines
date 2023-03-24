@@ -24,22 +24,18 @@ export default function getController(userRepo: UserRepository, petRepo: PetRepo
   }
 
   async function getUser(ctx: ParameterizedContext, next: Next) {
-    try {
-      const user = await userRepo.get(ctx.params.id)
+    const user = await userRepo.get(ctx.params.id)
 
-      if (!user) {
-        throw new ResourceNotFoundError("User not found")
-      }
-
-      const pets = await petRepo.list(user.pets)
-
-      const displayableUser = { ...user.toJSON(), pets: pets }
-
-      ctx.status = 200
-      ctx.body = displayableUser
-    } catch (e: any) {
-      throw new InternalError(e.message)
+    if (!user) {
+      throw new ResourceNotFoundError("User not found")
     }
+
+    const pets = await petRepo.list(user.pets)
+
+    const displayableUser = { ...user.toJSON(), pets: pets }
+
+    ctx.status = 200
+    ctx.body = displayableUser
     next()
   }
 
