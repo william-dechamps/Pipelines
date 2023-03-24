@@ -1,15 +1,12 @@
-import { MissingDataError } from "../helpers/Errors"
 import JSONable from "./JSONable"
 import Pet from "./Pet"
 
 export default class User implements JSONable {
+  id?: any
   firstname: string
   lastname: string
   pets: Pet[]
-  constructor(firstname: string, lastname?: string) {
-    if (!firstname || !lastname) {
-      throw new MissingDataError()
-    }
+  constructor(firstname: string, lastname: string) {
     this.firstname = firstname
     this.lastname = lastname
     this.pets = []

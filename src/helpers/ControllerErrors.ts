@@ -15,3 +15,17 @@ export class InvalidPayload extends HttpError {
     this.httpStatus = 400
   }
 }
+
+export class InternalError extends HttpError {
+  constructor(message: string) {
+    super(message)
+    this.httpStatus = 500
+  }
+}
+
+export class ResourceNotFoundError extends HttpError {
+  constructor(message: string) {
+    super(message)
+    this.httpStatus = 404
+  }
+}

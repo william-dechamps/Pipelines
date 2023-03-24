@@ -1,6 +1,7 @@
 import JSONable from "./JSONable"
 
 export default class Pet implements JSONable {
+  id?: any
   vetId: Number
   name: string
   kind: string
@@ -20,7 +21,8 @@ export default class Pet implements JSONable {
   }
 
   /**
-   * @returns string `name, kind, age, vetId`
+   * @returns string `name (vetId): kind, age`
+   * @example "Pastèque (123456): dog, 2"
    */
   describe(): string {
     throw new Error("Not implemented")
