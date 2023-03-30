@@ -35,15 +35,20 @@ export default class UserRepositoryMongo implements UserRepository {
       }
     }
     user.id = result.insertedId.toString()
+    // @ts-ignore
+    delete user._id
     return user
   }
 
   async update(user: User): Promise<User> {
-    const mongoUserUpdated = await this.users.findOneAndUpdate({ _id: new ObjectId(user.id) }, user, { returnDocument: 'after' })
+    const mongoUserUpdated = await this.users.findOneAndReplace({ _id: new ObjectId(user.id) }, user, { returnDocument: 'after' })
 
     if (!mongoUserUpdated) {
       throw new NoResultError("User", user.id)
     }
+
+    // @ts-ignore
+    delete user._id
 
     return user
   }

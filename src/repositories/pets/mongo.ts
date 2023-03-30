@@ -35,17 +35,23 @@ export default class PetRepositoryMongo implements PetRepository {
         throw new ServerError(e.message)
       }
     }
-    pet.id = result.insertedId.toString()
-    logger.info(JSON.stringify(pet))
+
+    pet.id = result.insertedId.toString("hex")
+    // @ts-ignore
+    delete pet._id
+
     return pet
   }
 
   async update(pet: Pet): Promise<Pet> {
-    const mongoPetUpdated = await this.pets.findOneAndUpdate({ _id: new ObjectId(pet.id) }, pet, { returnDocument: 'after' })
+    const mongoPetUpdated = await this.pets.findOneAndReplace({ vetId: pet.vetId }, pet, { returnDocument: "after" })
 
     if (!mongoPetUpdated) {
       throw new NoResultError("Pet", pet.id)
     }
+
+    // @ts-ignore
+    delete pet._id
 
     return pet
   }
