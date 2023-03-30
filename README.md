@@ -380,3 +380,18 @@ Body 200 :
 ### Tests unitaires
 
 Implémenter les tests unitaires validant toutes les méthodes des classes Pet et User.
+
+### Tests d'intégration
+
+On veut tester uniquement les classes qui accèdent au stockage des données, en lecture comme en écriture.
+
+Pour cela, on lance un serveur mongo:  
+```bash
+docker-compose -f tests/integ/docker-compose.yaml up -d
+```
+
+Puis on peut exécuter la commande `npm run test:integ`.
+
+Si on veut éviter d'utiliser Docker, il faut s'assurer d'avoir un serveur mongo qui tourne en local et qui est accessible via l'url `localhost:27017`, ou modifier la
+ configuration dans les fichiers `tests/integ/*` et y mettre les bonnes valeurs.  
+ Déconseillé quand on travaille en team.
