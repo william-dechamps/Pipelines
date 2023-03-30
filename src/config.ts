@@ -15,13 +15,13 @@ type LogSettings = {
 }
 
 type MongoConf = {
+    authSource: string | boolean
     db: string,
     host: string,
     port: number,
-    user: string,
-    password: string,
-    replicaSet: string,
-    authSource: string | boolean
+    password?: string,
+    replicaSet?: string,
+    user?: string,
 }
 
 const Config = {

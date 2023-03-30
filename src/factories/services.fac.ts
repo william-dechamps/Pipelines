@@ -1,4 +1,4 @@
-import { AppSettings } from "../config"
+import { AppSettings, Config } from "../config"
 import getMongoDb from "../services/storage"
 
 
@@ -10,7 +10,7 @@ export = async (conf: AppSettings) => {
   if (conf.mockDb) {
     PersistenceService = null
   } else {
-    PersistenceService = await getMongoDb()
+    PersistenceService = await getMongoDb(Config.getMongoConf())
   }
 
   return {
