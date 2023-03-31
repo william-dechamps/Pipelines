@@ -17,4 +17,4 @@ jobs:
         with:
           node-version: 18.x
       - name: Use Tester-compose
-        uses: docker-compose -f tests/functionnal/dependencies/tester-compose.yaml up -d
+        run: docker-compose -f tests/functionnal/dependencies/tester-compose.yaml up -d
