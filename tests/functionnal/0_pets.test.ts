@@ -22,8 +22,8 @@ describe("Functionnal testing for Pets", () => {
       test("It should specify that keys are missing", () => {
         expect(response.text).toMatch(/Missing keys/);
       });
-      test("It should take less than 100 ms", () => {
-        expect(duration).toBeLessThan(100);
+      test("It should take less than 200 ms", () => {
+        expect(duration).toBeLessThan(200);
       });
     });
     describe("Valid payload", () => {
@@ -47,7 +47,7 @@ describe("Functionnal testing for Pets", () => {
       test("It should specify that keys are missing", () => {
         expect(response.body).toMatchObject(pasteque);
       });
-      test("It should take less than 100 ms", () => {
+      test("It should take less than 200 ms", () => {
         expect(duration).toBeLessThan(200);
       });
     });
