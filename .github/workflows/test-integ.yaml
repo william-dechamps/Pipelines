@@ -4,17 +4,17 @@ on:
       - main
 
 jobs:
-  test-funct:
-    name: test-funct
+  test-integ:
+    name: test-integ
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: build dependencies
-        run: docker-compose -f tests/functionnal/dependencies/docker-compose.yaml up -d
+      - name: Build dependencies
+        run: docker-compose -f tests/integ/dependencies/docker-compose.yaml up -d
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
       - name: Use Tester-compose
-        run: docker-compose -f tests/functionnal/dependencies/tester-compose.yaml up -d
+        run: docker-compose -f tests/integ/dependencies/tester-compose.yaml up -d
