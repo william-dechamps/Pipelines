@@ -1,0 +1,46 @@
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test-unit:
+    name: test-unit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        run: npm ci
+      - name: Unit tests
+        run: npm run test:unit
+
+  test-funct:
+    name: test-funct
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: build dependencies
+        run: docker-compose -f tests/functionnal/dependencies/docker-compose.yaml up --abort-on-container-exit
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+      - name: Run tests
+        run: docker-compose -f tests/functionnal/dependencies/tester-compose.yaml up --abort-on-container-exit
+
+  test-integ:
+    name: test-integ
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Build dependencies
+        run: docker-compose -f tests/integ/dependencies/docker-compose.yaml up --abort-on-container-exit
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+      - name: Run tests
+        run: docker-compose -f tests/integ/dependencies/tester-compose.yaml up --abort-on-container-exit
