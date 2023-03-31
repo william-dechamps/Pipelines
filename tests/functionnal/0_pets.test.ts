@@ -1,10 +1,8 @@
 import request from "supertest"
-import Pet from "../../src/models/Pet"
 
 const apiUrl = `${process.env.API_HOST || "localhost"}:${process.env.API_PORT || 6800}`
 
 describe("Functionnal testing for Pets", () => {
-  let cat: Pet
   let inserted: any
   describe("Adding a pet", () => {
     describe("Ivalid payload", () => {

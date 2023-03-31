@@ -36,9 +36,23 @@ CMD ["dist/index.js", "--config=./config/app.conf.json" ]
 FROM node:18-alpine as testinteg
 
 WORKDIR /app
-COPY --from=installer /app/tests/integ /app/tests/integ
 COPY --from=installer /app/node_modules /app/node_modules
 COPY --from=installer /app/package.json /app/package.json
-COPY --from=installer /app/tsconfig.json /app/tsconfig.json
+COPY ./src/ /app/src
+COPY ./tests/integ /app/tests/integ
+COPY ./tsconfig.json /app/tsconfig.json
+COPY ./jest.config.js /app/jest.config.js
 
 CMD [ "npm", "run", "test:integ" ]
+
+## Testinteg: get only test integ files and, node modules from installer (with dev dep) and package.json and run the test integ command
+FROM node:18-alpine as testfunc
+
+WORKDIR /app
+COPY --from=installer /app/node_modules /app/node_modules
+COPY --from=installer /app/package.json /app/package.json
+COPY ./tests/functionnal /app/tests/functionnal
+COPY ./tsconfig.json /app/tsconfig.json
+COPY ./jest.config.js /app/jest.config.js
+
+CMD [ "npm", "run", "test:func" ]
