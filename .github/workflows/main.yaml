@@ -22,7 +22,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: build dependencies
-        run: docker-compose -f tests/functionnal/dependencies/docker-compose.yaml up --abort-on-container-exit
+        run: docker-compose -f tests/functionnal/dependencies/docker-compose.yaml up -d
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
@@ -37,7 +37,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Build dependencies
-        run: docker-compose -f tests/integ/dependencies/docker-compose.yaml up --abort-on-container-exit
+        run: docker-compose -f tests/integ/dependencies/docker-compose.yaml up -d
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
