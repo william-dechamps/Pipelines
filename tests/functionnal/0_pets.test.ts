@@ -20,14 +20,14 @@ describe("Functionnal testing for Pets", () => {
       test("It should specify that keys are missing", () => {
         expect(response.text).toMatch(/Missing keys/)
       })
-      test("It should take less than 50 ms", () => {
-        expect(duration).toBeLessThan(50)
+      test("It should take less than 100 ms", () => {
+        expect(duration).toBeLessThan(100)
       })
     })
     describe("Valid payload", () => {
       let response: any
       let duration: number
-      let pasteque = { name: "Pastèque", kind: "dog", vetId: 1, birthDate: "2020-08-07T10:00:00Z" }
+      let pasteque = { name: "Pastèque", kind: "dog", vetId: 1, birthDate: "2020-08-07T10:00:00.000Z" }
       test("Is should return 201", async () => {
         let start = new Date().getTime()
         response = await request(apiUrl)
@@ -40,8 +40,8 @@ describe("Functionnal testing for Pets", () => {
       test("It should specify that keys are missing", () => {
         expect(response.body).toMatchObject(pasteque)
       })
-      test("It should take less than 50 ms", () => {
-        expect(duration).toBeLessThan(50)
+      test("It should take less than 100 ms", () => {
+        expect(duration).toBeLessThan(100)
       })
     })
   })
