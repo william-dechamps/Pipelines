@@ -1,7 +1,7 @@
 version: "3.9"
 networks:
-  testinteg:
-    name: testinteg
+  testfunc:
+    name: testfunc
 services:
   userpetsapi:
     container_name: "userpetsapi"
@@ -17,6 +17,6 @@ services:
       LOG_FORMAT: "splat,simple"
       MOCK_DB: "true"
     networks:
-      - testinteg
+      - testfunc
     ports:
       - 6800:80

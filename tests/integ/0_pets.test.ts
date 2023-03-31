@@ -7,7 +7,7 @@ import { MongoConf } from "../../src/config"
 import logger from "../../src/services/logger"
 
 const mongoConf: MongoConf = {
-  host: "localhost",
+  host: process.env.DBHOST || "localhost",
   port: 27017,
   db: "userpets",
   authSource: "userpets"
@@ -31,8 +31,14 @@ describe("Testing Pet Mongo", () => {
   })
   describe("Normal creation", () => {
     let inserted: Pet
+    let duration: number
     beforeAll(async () => {
+      let start = new Date().getTime()
       inserted = await PetStorage.add(cat)
+      let end = new Date().getTime()
+
+      duration = end - start
+
       insertedId = inserted.id
     })
     describe("Should write data into DB", () => {
@@ -49,6 +55,9 @@ describe("Testing Pet Mongo", () => {
           vetId: cat.vetId
         }
         expect(fromStorage).toMatchObject(expectedFromDb)
+      })
+      test("should take less than 40 ms", () => {
+        expect(duration).toBeLessThan(40)
       })
     })
   })
